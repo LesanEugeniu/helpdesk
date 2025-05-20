@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # web port
+      - "5005:5005" # debug port
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+#    restart: on-failure
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/authentication_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=verYs3cret
+      - POSTGRES_SCHEMA=authentication_db
+      - REDIS_PORT=6379
+      - SMTP_PORT=1025
+      - REDIS_HOST=redis
+      - SMTP_HOST=mailhog
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_DB=authentication_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=verYs3cret
+    ports:
+      - '5433:5432'
+  mailhog:
+#    TODO:add smtp
+    image: mailhog/mailhog
+    container_name: 'mailhog'
+    ports:
+      - "1025:1025" #SMTP
+      - "8025:8025" #WEB UI
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+#    ports:
+#      - 'external port : internal port'
+#  docker-compose up --build

@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
     @Column(name = "password", nullable = false)
@@ -30,6 +31,8 @@ public class User extends BaseEntity{
     @Column(name = "email_verified")
     private boolean emailVerified;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
 
     public Long getId() {
         return id;
@@ -100,6 +103,15 @@ public class User extends BaseEntity{
 
     public User setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+        return this;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public User setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
         return this;
     }
 }
