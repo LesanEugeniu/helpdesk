@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -32,7 +33,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.IF_
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value(value = "${custom.max.session}")
+    @Value("${session.max}")
     private int maxSession;
 
     private final RedisIndexedSessionRepository redisIndexedSessionRepository;
@@ -45,18 +46,21 @@ public class SecurityConfig {
 
     private final UserDetailsService detailsService;
 
+    private final CustomLogoutHandler logoutHandler;
+
     public SecurityConfig(
             RedisIndexedSessionRepository redisIndexedSessionRepository,
             PasswordEncoder passwordEncoder,
             HelpDeskAuthenticationEntryPoint authEntryPoint,
             HelpDeskAccessDeniedHandler accessDeniedHandler,
-            UserDetailsService detailsService
+            UserDetailsService detailsService, CustomLogoutHandler logoutHandler
     ) {
         this.redisIndexedSessionRepository = redisIndexedSessionRepository;
         this.passwordEncoder = passwordEncoder;
         this.authEntryPoint = authEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
         this.detailsService = detailsService;
+        this.logoutHandler = logoutHandler;
     }
 
     @Bean
@@ -95,7 +99,7 @@ public class SecurityConfig {
                         .logoutUrl("/api/v1/auth/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .addLogoutHandler(new CustomLogoutHandler(this.redisIndexedSessionRepository))
+                        .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) ->
                                 SecurityContextHolder.clearContext()
                         )
@@ -112,6 +116,11 @@ public class SecurityConfig {
     @Bean
     public SecurityContextRepository securityContextRepository() {
         return new HttpSessionSecurityContextRepository();
+    }
+
+    @Bean
+    public SecurityContextHolderStrategy securityContextHolderStrategy() {
+        return SecurityContextHolder.getContextHolderStrategy();
     }
 
 }

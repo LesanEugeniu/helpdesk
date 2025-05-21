@@ -32,9 +32,9 @@ import static io.github.helpdesk.exception.ProblemDetailBuilder.forStatusAndDeta
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Service
-public class AuthService {
+public class AuthenticationService {
 
-    @Value(value = "${custom.max.session}")
+    @Value("${session.max}")
     private int maxSession;
 
     private final UserRepository userRepository;
@@ -51,13 +51,13 @@ public class AuthService {
 
     private final SessionRegistry sessionRegistry;
 
-    public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       SecurityContextRepository securityContextRepository,
-                       SecurityContextHolderStrategy securityContextHolderStrategy,
-                       AuthenticationManager authManager,
-                       RedisIndexedSessionRepository redisIndexedSessionRepository,
-                       SessionRegistry sessionRegistry) {
+    public AuthenticationService(UserRepository userRepository,
+                                 PasswordEncoder passwordEncoder,
+                                 SecurityContextRepository securityContextRepository,
+                                 SecurityContextHolderStrategy securityContextHolderStrategy,
+                                 AuthenticationManager authManager,
+                                 RedisIndexedSessionRepository redisIndexedSessionRepository,
+                                 SessionRegistry sessionRegistry) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.securityContextRepository = securityContextRepository;
