@@ -2,16 +2,17 @@ package io.github.helpdesk.service;
 
 import java.util.List;
 
-public interface ServiceBase<T> {
+// D -> dto, T- id type
+public interface ServiceBase<D, T> {
 
-    List<T> getAll();
+    List<D> getAll();
 
-    T getById(String id);
+    D getById(T id);
 
-    T create(T dto);
+    D create(D dto);
 
-    T update(String id, T dto);
+    D update(T id, D dto);
 
-    void delete(String id);
+    void delete(T id);
 
 }
