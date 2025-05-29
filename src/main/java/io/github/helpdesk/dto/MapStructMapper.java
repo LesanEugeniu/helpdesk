@@ -1,8 +1,8 @@
 package io.github.helpdesk.dto;
 
-import io.github.helpdesk.model.Category;
 import io.github.helpdesk.dto.request.AuthenticationRequestDto;
 import io.github.helpdesk.dto.request.EmailVerificationRequestDto;
+import io.github.helpdesk.model.Category;
 import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,6 +25,7 @@ public interface MapStructMapper {
 
     @Mapping(target = "id", ignore = true)
     void updateCategory(CategoryDto categoryDto, @MappingTarget Category categoryFromDB);
+
     AuthenticationRequestDto mapTo(@Valid EmailVerificationRequestDto verificationRequestDto);
 
 }

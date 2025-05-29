@@ -4,6 +4,7 @@ import com.redis.testcontainers.RedisContainer;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -18,6 +19,16 @@ public abstract class TestcontainersConfiguration {
 
     @Container
     static final RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:alpine"));
+
+    @Container
+    static final GenericContainer<?> mailhog = new GenericContainer<>(DockerImageName.parse("mailhog/mailhog"))
+            .withExposedPorts(1025, 8025);
+
+    @DynamicPropertySource
+    static void mailProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.mail.host", mailhog::getHost);
+        registry.add("spring.mail.port", () -> mailhog.getMappedPort(1025));
+    }
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
