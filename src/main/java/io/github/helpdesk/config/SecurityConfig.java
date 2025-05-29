@@ -1,5 +1,7 @@
-package io.github.helpdesk.security;
+package io.github.helpdesk.config;
 
+import io.github.helpdesk.config.security.HelpDeskAccessDeniedHandler;
+import io.github.helpdesk.config.security.HelpDeskAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,8 @@ import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
+import java.util.List;
+
 import static org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED;
 
 @Configuration
@@ -47,6 +51,13 @@ public class SecurityConfig {
     private final UserDetailsService detailsService;
 
     private final CustomLogoutHandler logoutHandler;
+
+    private final String[] permitAllUrls = {
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/request-verification-email",
+            "/api/v1/auth/verify-email",
+    };
 
     public SecurityConfig(
             RedisIndexedSessionRepository redisIndexedSessionRepository,
@@ -82,7 +93,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll();
+                    auth.requestMatchers(permitAllUrls).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sessionManagement -> sessionManagement

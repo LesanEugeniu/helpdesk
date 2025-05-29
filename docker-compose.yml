@@ -12,10 +12,10 @@ services:
       - mailhog
 #    restart: on-failure
     environment:
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/authentication_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/helpdesk_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=verYs3cret
-      - POSTGRES_SCHEMA=authentication_db
+      - POSTGRES_SCHEMA=helpdesk_db
       - REDIS_PORT=6379
       - SMTP_PORT=1025
       - REDIS_HOST=redis
@@ -23,7 +23,7 @@ services:
   postgres:
     image: 'postgres:latest'
     environment:
-      - POSTGRES_DB=authentication_db
+      - POSTGRES_DB=helpdesk_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=verYs3cret
     ports:

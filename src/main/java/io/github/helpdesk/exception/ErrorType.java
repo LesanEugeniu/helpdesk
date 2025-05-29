@@ -14,7 +14,8 @@ public enum ErrorType {
     EMAIL_VERIFICATION_REQUIRED(create("errors/email-verification-required")),
     EMAIL_VERIFICATION_FAILED(create("errors/email-verification-failed")),
     EMAIL_ALREADY_VERIFIED(create("errors/email-already-verified")),
-    UNKNOWN_SERVER_ERROR(create("errors/unknown-server-error"));
+    UNKNOWN_SERVER_ERROR(create("errors/unknown-server-error")),
+    USER_NOT_FOUND(create("errors/user-not-found"));
 
     private final URI uri;
 

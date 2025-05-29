@@ -3,6 +3,7 @@ package io.github.helpdesk.service;
 import io.github.helpdesk.dto.request.AuthenticationRequestDto;
 import io.github.helpdesk.dto.request.RegistrationRequestDto;
 import io.github.helpdesk.exception.RestErrorResponseException;
+import io.github.helpdesk.model.Role;
 import io.github.helpdesk.model.User;
 import io.github.helpdesk.repo.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,13 +52,16 @@ public class AuthenticationService {
 
     private final SessionRegistry sessionRegistry;
 
+    private final EmailVerificationService emailVerificationService;
+
     public AuthenticationService(UserRepository userRepository,
                                  PasswordEncoder passwordEncoder,
                                  SecurityContextRepository securityContextRepository,
                                  SecurityContextHolderStrategy securityContextHolderStrategy,
                                  AuthenticationManager authManager,
                                  RedisIndexedSessionRepository redisIndexedSessionRepository,
-                                 SessionRegistry sessionRegistry) {
+                                 SessionRegistry sessionRegistry,
+                                 EmailVerificationService emailVerificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.securityContextRepository = securityContextRepository;
@@ -65,17 +69,20 @@ public class AuthenticationService {
         this.authManager = authManager;
         this.redisIndexedSessionRepository = redisIndexedSessionRepository;
         this.sessionRegistry = sessionRegistry;
+        this.emailVerificationService = emailVerificationService;
     }
 
     @Transactional
     public void register(RegistrationRequestDto request) {
         final var errors = new HashMap<String, List<String>>();
 
-        if (userRepository.existsByEmail(request.email()).isPresent()) {
+        if (userRepository.existsByEmail(request.email()) == null ||
+                userRepository.existsByEmail(request.email())) {
             errors.put("email", List.of("Email is already taken"));
         }
 
-        if (userRepository.existsByUserName(request.userName()).isPresent()) {
+        if (userRepository.existsByUserName(request.userName()) == null ||
+                userRepository.existsByUserName(request.userName())) {
             errors.put("userName", List.of("UserName is already taken"));
         }
 
@@ -87,11 +94,14 @@ public class AuthenticationService {
             );
         }
 
-        userRepository.save(new User()
+        User user = userRepository.save(new User()
                 .setEmail(request.email())
                 .setUserName(request.userName())
                 .setEmailVerified(false)
+                .setRole(Role.USER)
                 .setPassword(passwordEncoder.encode(request.password())));
+
+        emailVerificationService.sendVerificationOtp(user.getUserName(), user.getEmail());
     }
 
     public void login(AuthenticationRequestDto authenticationRequest,

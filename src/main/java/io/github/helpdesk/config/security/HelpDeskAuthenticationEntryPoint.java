@@ -1,4 +1,4 @@
-package io.github.helpdesk.security;
+package io.github.helpdesk.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.helpdesk.exception.ErrorType;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import static io.github.helpdesk.exception.ProblemDetailBuilder.forStatus;
 
 @Component
-public class HelpDeskAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public final class HelpDeskAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final static Logger log = LoggerFactory.getLogger(HelpDeskAuthenticationEntryPoint.class);
 

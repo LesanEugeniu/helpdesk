@@ -1,14 +1,16 @@
 package io.github.helpdesk.dto.request;
 
-import jakarta.validation.constraints.Email;
+import io.github.helpdesk.dto.annotation.Password;
 import jakarta.validation.constraints.NotBlank;
 
 public record EmailVerificationRequestDto(
-        @NotBlank(message = "Email is required")
-        @Email
-        String email,
+        @NotBlank(message = "UserName is required")
+        String userName,
 
         @NotBlank(message = "Otp is required")
-        String otp
+        String otp,
+
+        @Password
+        String password
 ) {
 }

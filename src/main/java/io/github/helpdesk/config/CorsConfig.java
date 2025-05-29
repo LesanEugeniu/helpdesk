@@ -1,4 +1,4 @@
-package io.github.helpdesk.security;
+package io.github.helpdesk.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
