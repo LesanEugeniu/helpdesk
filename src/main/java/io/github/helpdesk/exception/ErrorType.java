@@ -8,6 +8,7 @@ public enum ErrorType {
 
     UNAUTHORIZED(create("errors/unauthorized")),
     FORBIDDEN(create("errors/forbidden")),
+    NOT_FOUND(create("errors/not-found")),
     ACCOUNT_UNAVAILABLE(create("errors/account-unavailable")),
     REQUEST_VALIDATION_FAILED(create("errors/request-validation-failed")),
     RESOURCE_ALREADY_EXISTS(create("errors/resource-already-exists")),

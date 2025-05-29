@@ -13,19 +13,16 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 public abstract class TestcontainersConfiguration {
 
-    private static final int REDIS_PORT = 6378;
-
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
 
     @Container
-    static final RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:alpine"))
-            .withExposedPorts(REDIS_PORT);
+    static final RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:alpine"));
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redis::getHost);
-        registry.add("spring.redis.port", () -> redis.getMappedPort(REDIS_PORT));
+        registry.add("spring.data.redis.host", redis::getHost);
+        registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
     }
 
     @DynamicPropertySource
