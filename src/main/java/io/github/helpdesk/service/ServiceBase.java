@@ -1,11 +1,12 @@
 package io.github.helpdesk.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 // D -> dto, T- id type
 public interface ServiceBase<D, T> {
 
-    List<D> getAll();
+    Page<D> getAll(Pageable pageable);
 
     D getById(T id);
 

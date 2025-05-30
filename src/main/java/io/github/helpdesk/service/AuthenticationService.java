@@ -24,6 +24,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -136,4 +137,8 @@ public class AuthenticationService {
         }
     }
 
+    public void invalidateAllSessions(Principal principal) {
+        List<SessionInformation> sessions = this.sessionRegistry.getAllSessions(principal, false);
+        sessions.forEach(sessionInfo -> this.redisIndexedSessionRepository.deleteById(sessionInfo.getSessionId()));
+    }
 }

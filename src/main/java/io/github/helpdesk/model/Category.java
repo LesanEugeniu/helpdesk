@@ -11,7 +11,7 @@ public class Category extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     public Long getId() {
