@@ -12,14 +12,21 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "token")
 public class TokenConfig {
 
-    private TokenConfigProperties tokenConfigProperties;
+    private TokenConfigProperties passwordReset;
 
     @Bean
     public TokenService passwordResetTokenService(final RedisTemplate<String, String> redisTemplate) {
-        return new TokenService(tokenConfigProperties, redisTemplate);
+        return new TokenService(passwordReset, redisTemplate);
     }
 
     public record TokenConfigProperties(String cachePrefix, Duration ttl) {
     }
 
+    public TokenConfigProperties getPasswordReset() {
+        return passwordReset;
+    }
+
+    public void setPasswordReset(TokenConfigProperties passwordReset) {
+        this.passwordReset = passwordReset;
+    }
 }
